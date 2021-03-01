@@ -1,0 +1,26 @@
+
+Tool for program version manage.
+Selecting the program version from the list of versions.
+
+[90mSYNTAX[0m:
+   [1mvman[0m [[91mcommand[0m] [[92mgroup[0m [[93mversion[0m]]
+            |        |        |
+            |        |     Program version.
+            |        |
+            |     The name of the software groups managed by VMan.
+            |
+   ----- commands ----------------------------------------------------------------------------------
+   [91mh, help[0m                 Display help info.                                                       
+   [91mv[0m                       Show VMan version.
+   [91minit[0m                    Initialization of a new group of program versions under control of VMan.
+   [91ml, list[0m                 Lists of program groups managed by VMan.                                 
+   -------------------------------------------------------------------------------------------------
+
+[90mEXAMPLES[0m:
+   1. Show a list of available program groups 
+       [1mvman[0m [91ml[0m
+   2. Show a list of available program versions 
+       [1mvman[0m [92mperl[0m
+   3. Selecting the program version from the list of versions
+       [1mvman[0m [92mperl[0m [93m5.32.0.1[0m
+
