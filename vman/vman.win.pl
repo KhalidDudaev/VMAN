@@ -18,6 +18,8 @@ use lib Cwd::cwd.'/lib/';
 use vman;
 
 my $VMAN_HOME = _cwd;
+my $VMAN_REPO_URL = 'https://github.com/KhalidDudaev/VMAN/raw/main';
+sub VMAN_REPO_URL { $VMAN_REPO_URL }
 
 repoUpdate() if (! -e "$VMAN_HOME/.repo");
 
@@ -124,7 +126,8 @@ sub repoUpdate {
     rmtree "$VMAN_HOME/.download";
     mkdir "$VMAN_HOME/.download";
 
-    my $link = 'https://github.com/KhalidDudaev/VMAN/raw/main/.conf/.repo.zip';
+    # my $link = VMAN_REPO_URL . '/.conf/.repo.zip';
+    my $link = "$VMAN_REPO_URL/.conf/.repo.zip";
     my $content = download $link, '.repo.zip';
 
     writeFile "$VMAN_HOME/.download/.repo.zip", $content;
@@ -157,17 +160,23 @@ sub install {
     rmtree "$path/.install";
     mkdir "$path/.download";
     mkdir "$path/.install";
+    mkdir "$path/.conf";
 
     my $appdir;
 
     my $dfname = $link;
     $dfname =~ s/^.*\/(.*?)$/$1/sx;
 
+    # 'https://github.com/KhalidDudaev/VMAN/raw/main/.conf/init/gradle.conf.zip'
+    if(! -e "$path/.init.vman.cmd"){
+        my $confContent = download "$VMAN_REPO_URL/.conf/init/$name.conf.zip", "$name.conf.zip";
+        writeFile "$path/.download/$name.conf.zip", $confContent;
+        unzip "$path/.download/$name.conf.zip", "$path/.conf";
+        move "$path/.conf/$name.init.vman.cmd", "$path/.conf/.init.vman.cmd";
+    }
+
     my $content = download $link, $dfname;
     writeFile "$path/.download/$dfname", $content;
-    # my $zipfile = new vmanlib::fs ("$path/.download/$dfname");
-    # $zipfile->($content);
-
     unzip "$path/.download/$dfname", "$path/.install";
 
     my @childs = getDirChilds "$path/.install";

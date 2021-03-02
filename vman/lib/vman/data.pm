@@ -37,7 +37,14 @@ sub data {
     return $self->{data}{$key} if ($key && !$value);
     
     if ($key && $value) {
-        %{$self->{data}{$key}} = (%{$self->{data}{$key}}, %$value);
+            # no strict;
+        exists $self->{data}{$key} or die "NOT FOUND"; 
+        # if(ref \$value eq 'SCALAR'){
+        #     $self->{data}{$key} = $value;
+        # } else {
+            %{$self->{data}{$key}} = (%{$self->{data}{$key}}, %$value);
+        # }
+
         $self->write();
     }
 
@@ -47,10 +54,10 @@ sub data {
 sub read {
     # no strict;
     my $self        = shift;
-
+    my ($child)     = $self =~ m/^(.*?)\=.*?$/;
     $self->{raw}   = $self->{file}->read();
 
-    if ( exists &{caller(1).'::parse'} ) {
+    if ( exists &{$child.'::parse'} ) {
         $self->{data}   = $self->parse($self->{raw});
     } else {
         $self->{data}   = eval $self->{raw};
@@ -61,8 +68,9 @@ sub read {
 
 sub write {
     my $self        = shift;
+    my ($child)     = $self =~ m/^(.*?)\=.*?$/;
 
-    if ( exists &{caller(1).'::toString'} ) {
+    if ( exists &{$child.'::toString'} ) {
         $self->{file}->write($self->toString());
     } else {
         $self->{file}->write(Dumper $self->{data});
