@@ -1,0 +1,103 @@
+### PAKCAGE REPO ###################################################################################################################
+package vman::repo;
+use strict;
+use warnings;
+use feature 'say';
+use Data::Dumper;
+use Data::Dump 'dump';
+
+use parent 'vman::data';
+
+sub remSpace ($) { my $str = shift; $str =~ s/^\s*(.*)\s*$/$1/; return $str; }
+
+sub new {
+    my $package     = shift;
+    my $repofile    = shift or die "need repo file name!!!";
+    my $data        = shift || {};
+    my $confs       = {};
+
+    my $self        = bless $confs, $package;
+
+    $self->{repo}   = vman::fs->new($repofile);
+
+    $self->read() if ($self->{repo}->exists);
+
+    if (!$self->{repo}->exists){
+        $self->{data} = $data;
+        $self->write();
+    }
+
+    return $self;
+}
+
+sub repo {
+    my $self        = shift;
+    my $key         = shift;
+    my $value       = shift;
+
+    return $self->{data}{$key} if ($key && !$value);
+    
+    if ($key && $value) {
+        %{$self->{data}{$key}} = (%{$self->{data}{$key}}, %$value);
+        $self->write();
+    }
+
+    return $self->{data};
+}
+
+sub read {
+    no strict;
+    my $self        = shift;
+    # my $dbfile      = shift;
+    $self->{data}   = parse($self->{repo}->read());
+    return %{$self->{data}};
+}
+
+sub write {
+    my $self        = shift;
+    $self->{repo}->write($self->toString());
+}
+
+sub parse {
+    my $inputText   = shift;
+    my @data;
+    my $res = {};
+    my @versions;
+    my $pattern = '(?:^\w+(?:\s+\d+.*?zip\n)+)+';
+    my $key;
+
+    foreach my $row ($inputText =~ m/$pattern/gm) {
+        @data       = split /\n/, $row;
+        $key        = $data[0];
+        @versions   = map { remSpace $_ } @data[1..$#data];
+        my $ver     = {};
+
+        for(@versions){
+            my($k, $v) = split /\s+/, $_;
+            $ver->{$k} = $v;
+        }
+
+        $res->{$key} = $ver;
+    }
+
+    return $res;
+}
+
+sub toString {
+    my $self        = shift;
+    my $data        = $self->{data};
+    my $res         = '';
+    # no strict 'refs';
+
+    foreach my $app (sort keys %$data) {
+        $res .= "$app" . "\n";
+        foreach my $ver (sort keys %{$data->{$app}}) {
+            $res .= "    $ver    $data->{$app}{$ver}" . "\n";
+        }
+        $res .= "\n";
+    }
+
+    return $res;
+}
+
+1;

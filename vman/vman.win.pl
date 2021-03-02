@@ -11,14 +11,20 @@ use HTTP::Tiny;
 use File::Path;
 use File::Copy;
 
-use lib qw '
-    C:\__programs__\utools\vman\lib\
-';
+# use lib 'C:/__programs__/utools/vman/lib/';
 
-use vmanlib;
+use lib Cwd::cwd.'/lib/';
 
-setRepo './repo.vmdb';
-setConf './conf.vmdb';
+use vman;
+
+my $VMAN_HOME = _cwd;
+
+repoUpdate() if (! -e "$VMAN_HOME/.repo");
+
+setRepo './.repo';
+setConf './.conf';
+
+# say dump repo;
 
 # repo 'java', { "321" => "ALKSDFJASLKDFJ" };
 
@@ -38,7 +44,7 @@ setConf './conf.vmdb';
 
 # my %db = ();
 
-my $VMAN_HOME = _cwd;
+
 
 # %db = readDBase("$VMAN_HOME/vman4.db");
 # %db = readDBase("$VMAN_HOME/vman4.db");
@@ -51,6 +57,7 @@ if (!$ARGV[0] || $ARGV[0] eq "-v") { say ''; version(); say ''; goto end; }
 if ($ARGV[0] && $ARGV[0] eq "init") { init(); goto end; }
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:l|list|\-l|\-\-list)\b/) { say ''; app_list(); say ''; goto end; } 
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:r|repo|\-r|\-\-repo)\b/) { say ''; repo_list(); say ''; goto end; } 
+if ($ARGV[0] && $ARGV[0] =~ /\b(?:u|updae|\-u|\-\-updae)\b/) { say ''; repoUpdate(); say ''; goto end; } 
 if ($ARGV[0]) { ver_list(@ARGV); goto end; }
 
 end:   
@@ -61,7 +68,7 @@ sub version {
 
 sub help {
     version();
-    my $txt = readFile ("$VMAN_HOME/help02.txt");
+    my $txt = readFile ("$VMAN_HOME/help");
     say $txt;
 }
 
@@ -108,6 +115,23 @@ sub init {
     }
 
     say "\x1b[33mNew app \"$APP_DIR_NAME\" inittializated\x1b[0m"
+}
+
+sub repoUpdate {
+
+    say "update repository ...";
+    say '';
+    rmtree "$VMAN_HOME/.download";
+    mkdir "$VMAN_HOME/.download";
+
+    my $link = 'https://github.com/KhalidDudaev/VMAN/raw/main/.conf/.repo.zip';
+    my $content = download $link, '.repo.zip';
+
+    writeFile "$VMAN_HOME/.download/.repo.zip", $content;
+    unzip "$VMAN_HOME/.download/.repo.zip", "$VMAN_HOME";
+
+    rmtree "$VMAN_HOME/.download";
+
 }
 
 sub install {
@@ -170,7 +194,8 @@ sub repo_list {
     #         say '';
     #     }
     # }
-    say readFile('./repo.vmdb');
+    say readFile('./.repo');
+    # say repo;
 }
 
 sub app_list {
