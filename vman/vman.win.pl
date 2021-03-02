@@ -11,9 +11,9 @@ use HTTP::Tiny;
 use File::Path;
 use File::Copy;
 
-# use lib 'C:/__programs__/utools/vman/lib/';
+use lib 'C:/__programs__/utools/vman/lib/';
 
-use lib Cwd::cwd.'/lib/';
+# use lib Cwd::cwd.'/lib/';
 
 use vman;
 
@@ -56,7 +56,7 @@ setConf './.conf';
  
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:h|help|\-h|\-\-help|\/\?)\b/) { say ''; help(); say ''; goto end; }
 if (!$ARGV[0] || $ARGV[0] eq "-v") { say ''; version(); say ''; goto end; }
-if ($ARGV[0] && $ARGV[0] eq "init") { init(); goto end; }
+if ($ARGV[0] && $ARGV[0] eq "init") { init($ARGV[1], '000', $ARGV[2]); goto end; }
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:l|list|\-l|\-\-list)\b/) { say ''; app_list(); say ''; goto end; } 
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:r|repo|\-r|\-\-repo)\b/) { say ''; repo_list(); say ''; goto end; } 
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:u|updae|\-u|\-\-updae)\b/) { say ''; repoUpdate(); say ''; goto end; } 
@@ -76,26 +76,28 @@ sub help {
 
 sub init {
 
-    my $APP_DIR         = cwd();
-
-    my $APP_DIR_NAME    = getLocalDirName $APP_DIR;
-    # $APP_DIR_NAME       =~ s/^.*\\(.*?)$/$1/gsx;
-
-    # `echo $APP_DIR > $VMAN_HOME\\paths\\$APP_DIR_NAME`;
-
-    # writeFile "$VMAN_HOME/paths/$APP_DIR_NAME", $APP_DIR;
+    my $APP_DIR         = $_[2] || cwd();
+    my $APP_VER         = $_[1];
+    my $APP_DIR_SHORT   = getLocalDirName $APP_DIR;
+    my $APP_NAME        = $_[0] || $APP_DIR_SHORT;
     
-    # $db{$APP_DIR_NAME}[0] = ["0.0"];
-    # $db{$APP_DIR_NAME}[1] = "http://";
-    # $db{$APP_DIR_NAME}[2] = $APP_DIR;
+    mkdir $APP_DIR if ! -d $APP_DIR;
 
-    conf $APP_DIR_NAME, $APP_DIR;
+    # `echo $APP_DIR > $VMAN_HOME\\paths\\$APP_DIR_SHORT`;
+
+    # writeFile "$VMAN_HOME/paths/$APP_DIR_SHORT", $APP_DIR;
+    
+    # $db{$APP_DIR_SHORT}[0] = ["0.0"];
+    # $db{$APP_DIR_SHORT}[1] = "http://";
+    # $db{$APP_DIR_SHORT}[2] = $APP_DIR;
+
+    conf $APP_NAME, { 'ver' => $APP_VER, 'path' => $APP_DIR };
 
     # writeDBase(\%db, "$VMAN_HOME/vman.db");
     # writeDBase(\%db, "$VMAN_HOME/vman4.db");
 
-    my $env_name = uc $APP_DIR_NAME;
-    my $env_value = toLeftSlash ($APP_DIR) . "\\current";
+    # my $env_name = uc $APP_NAME;
+    # my $env_value = toLeftSlash ($APP_DIR) . "\\current";
 
     # `setx $env_name $env_value`;
     # system "setx PATH %PATH%;$env_value";
@@ -104,9 +106,9 @@ sub init {
 
     if (! -e "$APP_DIR/candidate") {
         my $dir1 = "$APP_DIR/candidate";
-        my $dir2 = "$APP_DIR/candidate/0.0";
+        # my $dir2 = "$APP_DIR/candidate/0.0";
         mkdir $dir1;
-        mkdir $dir2;
+        # mkdir $dir2;
     }
 
     if (! -e "$APP_DIR/current") { mkdir "$APP_DIR/current" }
@@ -116,7 +118,7 @@ sub init {
         `$APP_DIR/.init.vman.cmd`
     }
 
-    say "\x1b[33mNew app \"$APP_DIR_NAME\" inittializated\x1b[0m"
+    say "\x1b[33mNew app \"$APP_NAME\" initializated\x1b[0m"
 }
 
 sub repoUpdate {
@@ -138,15 +140,16 @@ sub repoUpdate {
 }
 
 sub install {
-    my $name    = shift;
-    my $ver     = shift;
-    my $path    = shift;
+    my $app_name    = shift;
+    my $ver         = shift;
+    my $app_path    = shift;
 
-    # my $link    = $db{$name}[1];
-    # my $pattern = $db{$name}[0][0];
+    # my $link    = $db{$app_name}[1];
+    # my $pattern = $db{$app_name}[0][0];
 
-    my $link    = ${repo $name}{$ver};
-    
+    init($app_name, $ver, $app_path) if ! -d "$app_path/candidate";
+
+    my $link    = ${repo $app_name}{$ver};
     my $folder;
 
     ($link, $folder) = split /\s+/, $link;
@@ -156,11 +159,12 @@ sub install {
 
     # $link =~ s/\{\{(\d+)\}\}/$cap[$1]/gsxe;
 
-    rmtree "$path/.download";
-    rmtree "$path/.install";
-    mkdir "$path/.download";
-    mkdir "$path/.install";
-    mkdir "$path/.conf";
+    rmtree "$app_path/.download";
+    rmtree "$app_path/.install";
+    rmtree "$app_path/.conf";
+    mkdir "$app_path/.download";
+    mkdir "$app_path/.install";
+    mkdir "$app_path/.conf";
 
     my $appdir;
 
@@ -168,26 +172,33 @@ sub install {
     $dfname =~ s/^.*\/(.*?)$/$1/sx;
 
     # 'https://github.com/KhalidDudaev/VMAN/raw/main/.conf/init/gradle.conf.zip'
-    if(! -e "$path/.init.vman.cmd"){
-        my $confContent = download "$VMAN_REPO_URL/.conf/init/$name.conf.zip", "$name.conf.zip";
-        writeFile "$path/.download/$name.conf.zip", $confContent;
-        unzip "$path/.download/$name.conf.zip", "$path/.conf";
-        move "$path/.conf/$name.init.vman.cmd", "$path/.conf/.init.vman.cmd";
+    if(! -e "$app_path/.init.vman.cmd"){
+        my $confContent = download "$VMAN_REPO_URL/.conf/init/$app_name.conf.zip", "$app_name.conf.zip";
+        writeFile "$app_path/.download/$app_name.conf.zip", $confContent;
+        unzip "$app_path/.download/$app_name.conf.zip", "$app_path/.conf";
+        move "$app_path/.conf/$app_name.init.vman.cmd", "$app_path/.init.cmd";
     }
 
     my $content = download $link, $dfname;
-    writeFile "$path/.download/$dfname", $content;
-    unzip "$path/.download/$dfname", "$path/.install";
+    writeFile "$app_path/.download/$dfname", $content;
+    unzip "$app_path/.download/$dfname", "$app_path/.install";
 
-    my @childs = getDirChilds "$path/.install";
+    my @childs = getDirChilds "$app_path/.install";
 
     if ($#childs == 0) {
-        ($appdir) = getDirChilds "$path/.install";
-        move "$path/.install/$appdir", "$path/candidate/$ver";
+        ($appdir) = getDirChilds "$app_path/.install";
+        move "$app_path/.install/$appdir", "$app_path/candidate/$ver";
     } else {
-        move "$path/.install", "$path/candidate/$ver";
+        move "$app_path/.install", "$app_path/candidate/$ver";
     }
-
+    
+    if (-e "$app_path/.init.cmd") {
+        `$app_path/.init.cmd`;
+        unlink "$app_path/.init.cmd";
+    }
+    rmtree "$app_path/.download";
+    rmtree "$app_path/.install";
+    rmtree "$app_path/.conf";
 }
 
 sub repo_list {
@@ -209,23 +220,32 @@ sub repo_list {
 
 sub app_list {
     # say Dumper $db{candidates};
-    foreach my $app_name (sort keys %{conf()}) {
-        my $APP_DIR = conf $app_name;
-        my $VER_CURRENT = remNL readFile "$APP_DIR/.current";
-        my $APP = $app_name;
-        say " $APP\t\t\x1b[90m$VER_CURRENT\x1b[0m";
+    foreach my $APP (sort keys %{conf()}) {
+        my $APP_INFO = conf $APP;
+        my $APP_DIR = $APP_INFO->{path};
+        my $APP_VER = $APP_INFO->{ver};
+        # my $APP = $app_name;
+        # my $VER_CURRENT = remNL readFile "$APP_DIR/.current";
+        say "\33[91mERROR: \33[0mINCORRECT FILE NAME OR PATH... \33[91m'$APP_DIR/.current'\33[0m FOR \33[91m'$APP'\33[0m" if ! -e "$APP_DIR/.current";
+        my $VER_CURRENT = -e "$APP_DIR/.current" ? remNL readFile "$APP_DIR/.current" : "\33[91mNOT INFO\33[0m";
+        # say " $APP\t\t\x1b[90m$VER_CURRENT\x1b[0m";
+        say " $APP\t\t\x1b[90m$APP_VER\x1b[0m";
     }
 }
 
 sub ver_list {
     # my $APP_DIR = remNL (readFile("$VMAN_HOME/paths/$_[0]"));
     # my $APP_DIR = $db{$_[0]}[2];
-    my $APP_DIR = conf $_[0];
-    my $VER_CURRENT = remNL readFile "$APP_DIR/.current";
-    my $APP = getLocalDirName $APP_DIR;
+    my $APP_INFO    = conf $_[0];
+    my $APP_DIR     = $APP_INFO->{path};
+    my $APP_VER     = $APP_INFO->{path};
+    $APP_DIR        = cwd() if !$APP_DIR;
+    # my $VER_CURRENT = $APP_DIR && -e "$APP_DIR/.current" ? remNL readFile "$APP_DIR/.current" : "NOT INSTALLED";
+    my $VER_CURRENT = $APP_VER;
+    my $APP = $ARGV[0] || getLocalDirName $APP_DIR;
 
     # my @candidates = `dir/ad /oe /b $APP_DIR\\candidate`;
-    my @candidates = getDirChilds "$APP_DIR/candidate";
+    my @candidates = $APP_DIR && -e "$APP_DIR/candidate" ? getDirChilds "$APP_DIR/candidate": ();
     # my @versions = @{$db{$APP}[0]}[1..$#{$db{$APP}[0]}];
     no warnings;
 
@@ -259,12 +279,18 @@ sub ver_list {
 
         $txt =~ s/\s\s$VER_CURRENT/\x1b[97m# $VER_CURRENT\x1b[90m/sx if $VER_CURRENT;
 
+        # if (! -d "$APP_DIR/candidate/") {
+        #     say "####################### $APP : $ARGV[1] : $APP_DIR";
+        # }
+
         say $txt;
         
     } else {
+
         
         if (! -e "$APP_DIR/candidate/$ARGV[1]") {
-            install($APP, $ARGV[1], "$APP_DIR");
+            # init($APP, $ARGV[1], $APP_DIR);
+            install($APP, $ARGV[1], $APP_DIR);
         }
 
         if (-e "$APP_DIR/candidate/$ARGV[1]") {

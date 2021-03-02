@@ -20,8 +20,10 @@ sub new {
     my $data        = shift || {};
 
     $self->{file}   = vman::fs->new($datafile);
-    $self->read() if ($self->{file}->exists);
-    if (!$self->{file}->exists){
+
+    if ($self->{file}->exists) {
+        $self->read();
+    } else {
         $self->{data} = $data;
         $self->write();
     }
@@ -38,12 +40,18 @@ sub data {
     
     if ($key && $value) {
             # no strict;
-        exists $self->{data}{$key} or die "NOT FOUND"; 
-        # if(ref \$value eq 'SCALAR'){
-        #     $self->{data}{$key} = $value;
-        # } else {
+        # exists $self->{data}{$key} or die "NOT FOUND"; 
+
+        # say "############## $key" . Dumper($value);
+
+        if(ref \$value eq 'SCALAR'){
+            $self->{data}{$key} = $value;
+        } else {
+            $self->{data}{$key} = {} if !$self->{data}{$key};
             %{$self->{data}{$key}} = (%{$self->{data}{$key}}, %$value);
-        # }
+        }
+        
+        # $self->{data}{$key} = $value;
 
         $self->write();
     }

@@ -24,8 +24,10 @@ sub parse {
     my $pattern = '^\w+\s+.*';
 
     foreach my $row ($inputText =~ m/$pattern/gm) {
-        my($app, $path)       = split /\s+/, $row;
-        $res->{$app} = $path;
+        # my($app, $ver, $path)       = split /\s+/, $row;
+        my($app, $ver, $path)       = $row =~ m/^(.*?)\s+(.*?)\s+(.*?)$/;
+        # $res->{$app} = $path;
+        $res->{$app} = { ver => $ver, path => $path };
     }
 
     return $res;
@@ -37,7 +39,7 @@ sub toString {
     my $res;
 
     foreach my $app (sort keys %$data) {
-        $res .= "$app    $data->{$app}\n";
+        $res .= "$app $data->{$app}{ver} $data->{$app}{path}\n";
     }
 
     return $res;

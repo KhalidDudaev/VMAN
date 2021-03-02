@@ -140,48 +140,48 @@ sub parseData {
     return $res;
 }
 
-sub readConf {
-    no strict;
-    my $dbfile = shift;
-    unless (-e $dbfile) {
-        writeConf();
-    }
-    my $data = parseConf(readFile($dbfile));
-    return %$data;
-}
+# sub readConf {
+#     no strict;
+#     my $dbfile = shift;
+#     unless (-e $dbfile) {
+#         writeConf();
+#     }
+#     my $data = parseConf(readFile($dbfile));
+#     return %$data;
+# }
 
-sub writeConf {
-    my $db = shift;
-    my $dbfile = shift;
-    my $data = data2string ($db);
-    writeFile($dbfile, $data);
-}
+# sub writeConf {
+#     my $db = shift;
+#     my $dbfile = shift;
+#     my $data = data2string ($db);
+#     writeFile($dbfile, $data);
+# }
 
-sub parseConf {
-    my $inputText = shift;
-    my @data;
-    my $res = {};
-    my @versions;
-    foreach my $row ($inputText =~ m/^\w+\n\s+.*\n\s+.*\n\s+.*/gm) {
-        @data = split /\n/, $row;
-        @versions = split /\s+/, remSpace $data[1];
-        push @{$res->{$data[0]}}, ([@versions], remSpace $data[2], remSpace $data[3]);
-    }
-    return $res;
-}
+# sub parseConf {
+#     my $inputText = shift;
+#     my @data;
+#     my $res = {};
+#     my @versions;
+#     foreach my $row ($inputText =~ m/^\w+\n\s+.*\n\s+.*\n\s+.*/gm) {
+#         @data = split /\n/, $row;
+#         @versions = split /\s+/, remSpace $data[1];
+#         push @{$res->{$data[0]}}, ([@versions], remSpace $data[2], remSpace $data[3]);
+#     }
+#     return $res;
+# }
 
-sub data2string {
-    my $data = shift;
-    my $res;
-    foreach my $app (sort keys %$data) {
-        $res .= "$app" . "\n";
-        $res .= "    " . join (" ", @{$data->{$app}[0]}) . "\n";
-        $res .= "    $data->{$app}[1]" . "\n";
-        $res .= "    $data->{$app}[2]" . "\n";
-        $res .= "\n";
-    }
-    return $res;
-}
+# sub data2string {
+#     my $data = shift;
+#     my $res;
+#     foreach my $app (sort keys %$data) {
+#         $res .= "$app" . "\n";
+#         $res .= "    " . join (" ", @{$data->{$app}[0]}) . "\n";
+#         $res .= "    $data->{$app}[1]" . "\n";
+#         $res .= "    $data->{$app}[2]" . "\n";
+#         $res .= "\n";
+#     }
+#     return $res;
+# }
 
 sub getDirChilds {
     my $dir = shift;

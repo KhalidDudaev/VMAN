@@ -27,7 +27,13 @@ sub read {
     my $self        = shift;
     my $filename    = $self->{file};
     my $fileInner   = '';
-    open(FH, '<', $filename) or die "Cannot open file $filename. $@";
+
+    # my $res = -e $filename ? open(FH, '<', $filename) : "INCORRECT FILE NAME OR PATH... '$filename'";
+    # eval { open(FH, '<', $filename) };
+    # die "Cannot open file $filename" . $@ if $@;
+
+    die "INCORRECT FILE NAME OR PATH... '$filename'\n" . $@ if ! -e $filename;
+    open(FH, '<', $filename);
     while(<FH>){
         $fileInner .= $_;
     }
@@ -39,7 +45,7 @@ sub write {
     my $self        = shift;
     my $filename    = $self->{file};
     my $data        = shift || die "no data for write file '$filename'";
-    open(FH, '>:raw', $filename) or die "Cannot open file $filename. $!";
+    open(FH, '>:raw', $filename); # or die "Cannot open file $filename. $!";
     print FH $data;
     close(FH);
 }
