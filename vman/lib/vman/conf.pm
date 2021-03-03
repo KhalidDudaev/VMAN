@@ -27,7 +27,7 @@ sub parse {
         # my($app, $ver, $path)       = split /\s+/, $row;
         my($app, $ver, $path)       = $row =~ m/^(.*?)\s+(.*?)\s+(.*?)$/;
         # $res->{$app} = $path;
-        $res->{$app} = { ver => $ver, path => $path };
+        $res->{$app} = { vers => $ver, path => $path };
     }
 
     return $res;
@@ -39,7 +39,7 @@ sub toString {
     my $res;
 
     foreach my $app (sort keys %$data) {
-        $res .= "$app $data->{$app}{ver} $data->{$app}{path}\n";
+        $res .= "$app $data->{$app}{vers} $data->{$app}{path}\n";
     }
 
     return $res;
