@@ -119,17 +119,17 @@ kotlin
     1.3.72    https://github.com/JetBrains/kotlin/releases/download/v1.3.72/kotlin-compiler-1.3.72.zip
 
 perl
-    5.32.1.1    https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit-portable.zip
-    5.32.0.1    https://strawberryperl.com/download/5.32.0.1/strawberry-perl-5.32.0.1-64bit-portable.zip
-    5.30.3.1    https://strawberryperl.com/download/5.30.3.1/strawberry-perl-5.30.3.1-64bit-portable.zip
-    5.28.2.1    https://strawberryperl.com/download/5.28.2.1/strawberry-perl-5.28.2.1-64bit-portable.zip
-    5.26.3.1    https://strawberryperl.com/download/5.26.3.1/strawberry-perl-5.26.3.1-64bit-portable.zip
-    5.24.4.1    https://strawberryperl.com/download/5.24.4.1/strawberry-perl-5.24.4.1-64bit-portable.zip
-    5.22.3.1    https://strawberryperl.com/download/5.22.3.1/strawberry-perl-5.22.3.1-64bit-portable.zip
-    5.20.3.3    https://strawberryperl.com/download/5.20.3.3/strawberry-perl-5.20.3.3-64bit-portable.zip
-    5.18.4.1    https://strawberryperl.com/download/5.18.4.1/strawberry-perl-5.18.4.1-64bit-portable.zip
-    5.16.3.1    https://strawberryperl.com/download/5.16.3.1/strawberry-perl-5.16.3.1-64bit-portable.zip
-    5.14.4.1    https://strawberryperl.com/download/5.14.4.1/strawberry-perl-5.14.4.1-64bit-portable.zip
+    5.32.1.1    https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit.zip
+    5.32.0.1    https://strawberryperl.com/download/5.32.0.1/strawberry-perl-5.32.0.1-64bit.zip
+    5.30.3.1    https://strawberryperl.com/download/5.30.3.1/strawberry-perl-5.30.3.1-64bit.zip
+    5.28.2.1    https://strawberryperl.com/download/5.28.2.1/strawberry-perl-5.28.2.1-64bit.zip
+    5.26.3.1    https://strawberryperl.com/download/5.26.3.1/strawberry-perl-5.26.3.1-64bit.zip
+    5.24.4.1    https://strawberryperl.com/download/5.24.4.1/strawberry-perl-5.24.4.1-64bit.zip
+    5.22.3.1    https://strawberryperl.com/download/5.22.3.1/strawberry-perl-5.22.3.1-64bit.zip
+    5.20.3.3    https://strawberryperl.com/download/5.20.3.3/strawberry-perl-5.20.3.3-64bit.zip
+    5.18.4.1    https://strawberryperl.com/download/5.18.4.1/strawberry-perl-5.18.4.1-64bit.zip
+    5.16.3.1    https://strawberryperl.com/download/5.16.3.1/strawberry-perl-5.16.3.1-64bit.zip
+    5.14.4.1    https://strawberryperl.com/download/5.14.4.1/strawberry-perl-5.14.4.1-64bit.zip
 
 python
     3.9.1    https://www.python.org/ftp/python/3.9.1/python-3.9.1-embed-amd64.zip
