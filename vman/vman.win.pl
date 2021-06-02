@@ -12,7 +12,7 @@ use File::Path;
 use File::Copy;
 
 # use lib Cwd::cwd.'/lib/';
-use lib 'c:/_programs/utools/vman/lib/';
+use lib 'c:/__programs__/utools/vman/lib/';
 
 
 use vman;
@@ -328,7 +328,8 @@ sub ver_list {
 
     # say ">>>>> \n". dump sort {$b <=> $a} keys %cand;
     # my @versions = sort {$b <=> $a} keys %{repo $_[0]};
-    my @versions = sort {$b cmp $a} keys %cand;
+    my @versions = sort {$b <=> $a || $b cmp $a} keys %cand;
+    # say "##########################################";
 
     # $app =~ s/^.*[\\\/](.*?)$/$1/gsx;
 

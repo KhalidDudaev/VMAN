@@ -1,4 +1,9 @@
 gradle
+    7.0.2    https://services.gradle.org/distributions/gradle-7.0.2-all.zip
+    7.0.1    https://services.gradle.org/distributions/gradle-7.0.1-all.zip
+    7.0    https://services.gradle.org/distributions/gradle-7.0-all.zip
+    6.9    https://services.gradle.org/distributions/gradle-6.9-all.zip
+    6.8.3    https://services.gradle.org/distributions/gradle-6.8.3-all.zip
     6.8.2    https://services.gradle.org/distributions/gradle-6.8.2-all.zip
     6.8.1    https://services.gradle.org/distributions/gradle-6.8.1-all.zip
     6.8    https://services.gradle.org/distributions/gradle-6.8-all.zip
@@ -101,6 +106,7 @@ gradle
     0.7    https://services.gradle.org/distributions/gradle-0.7-all.zip
 
 java
+    16.0.1.hs    https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1+9/OpenJDK16U-jdk_x64_windows_hotspot_16.0.1_9.zip
     15.0.2.hs    https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2+7/OpenJDK15U-jdk_x64_windows_hotspot_15.0.2_7.zip
     14.0.2.hs    https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-14.0.2+12/OpenJDK14U-jdk_x64_windows_hotspot_14.0.2_12.zip
     13.0.2.hs    https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13.0.2+8/OpenJDK13U-jdk_x64_windows_hotspot_13.0.2_8.zip
@@ -111,6 +117,10 @@ java
     8.0.282.hs    https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u282-b08/OpenJDK8U-jdk_x64_windows_hotspot_8u282b08.zip
 
 kotlin
+    1.5.10    https://github.com/JetBrains/kotlin/releases/download/v1.5.10/kotlin-compiler-1.5.10.zip
+    1.5.0    https://github.com/JetBrains/kotlin/releases/download/v1.5.0/kotlin-compiler-1.5.0.zip
+    1.4.32    https://github.com/JetBrains/kotlin/releases/download/v1.4.32/kotlin-compiler-1.4.32.zip
+    1.4.31    https://github.com/JetBrains/kotlin/releases/download/v1.4.31/kotlin-compiler-1.4.31.zip
     1.4.30    https://github.com/JetBrains/kotlin/releases/download/v1.4.30/kotlin-compiler-1.4.30.zip
     1.4.21    https://github.com/JetBrains/kotlin/releases/download/v1.4.21/kotlin-compiler-1.4.21.zip
     1.4.20    https://github.com/JetBrains/kotlin/releases/download/v1.4.20/kotlin-compiler-1.4.20.zip
@@ -132,6 +142,9 @@ perl
     5.14.4.1    https://strawberryperl.com/download/5.14.4.1/strawberry-perl-5.14.4.1-64bit.zip
 
 python
+    3.9.5    https://www.python.org/ftp/python/3.9.5/python-3.9.5-embed-amd64.zip
+    3.9.4    https://www.python.org/ftp/python/3.9.4/python-3.9.4-embed-amd64.zip
+    3.9.2    https://www.python.org/ftp/python/3.9.2/python-3.9.2-embed-amd64.zip
     3.9.1    https://www.python.org/ftp/python/3.9.1/python-3.9.1-embed-amd64.zip
     3.9.0    https://www.python.org/ftp/python/3.9.0/python-3.9.0-embed-amd64.zip
     3.8.7    https://www.python.org/ftp/python/3.8.7/python-3.8.7-embed-amd64.zip
