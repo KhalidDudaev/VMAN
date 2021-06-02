@@ -11,9 +11,9 @@ use HTTP::Tiny;
 use File::Path;
 use File::Copy;
 
-use lib 'C:/__programs__/utools/vman/lib/';
-
 # use lib Cwd::cwd.'/lib/';
+use lib 'c:/_programs/utools/vman/lib/';
+
 
 use vman;
 
@@ -60,13 +60,14 @@ setConf './.conf';
 # %db = readDBase("$VMAN_HOME/vman4.db");
 
 # say Dumper \%db;
+# say "AKDJFHASKDFHASKDFJH";
  
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:h|help|\-h|\-\-help|\/\?)\b/) { say ''; help(); say ''; goto end; }
 if (!$ARGV[0] || $ARGV[0] eq "-v") { say ''; version(); say ''; goto end; }
 if ($ARGV[0] && $ARGV[0] eq "init") { init($ARGV[1], 'NVER', $ARGV[2]); goto end; }
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:l|list|\-l|\-\-list)\b/) { say ''; app_list($ARGV[1]); say ''; goto end; } 
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:r|repo|\-r|\-\-repo)\b/) { say ''; repo_list(); say ''; goto end; } 
-if ($ARGV[0] && $ARGV[0] =~ /\b(?:u|updae|\-u|\-\-updae)\b/) { say ''; repoUpdate(); say ''; goto end; } 
+if ($ARGV[0] && $ARGV[0] =~ /\b(?:u|update|\-u|\-\-update)\b/) { say ''; repoUpdate(); say ''; goto end; } 
 if ($ARGV[0]) { say ''; ver_list($ARGV[0], $ARGV[1], $ARGV[2]); goto end; }
 
 end:   
@@ -121,8 +122,9 @@ sub init {
     if (! -e "$app_path/current") { mkdir "$app_path/current" }
 
     # if $^O =~ /^MSWin/;
-    if (-e "$app_path/.init.vman.cmd") {
-        `$app_path/.init.vman.cmd`
+    if (-e "$app_path/.init.cmd") {
+        system "$app_path/.init.cmd";
+        # `$app_path/.init.cmd`;
     }
 
     say "\x1b[33mNew app \"$app_name\" initializated\x1b[0m"
@@ -154,7 +156,7 @@ sub install {
     # my $link    = $db{$app_name}[1];
     # my $pattern = $db{$app_name}[0][0];
 
-    if (! isApp($app_name)){
+    if (!isAppRepo($app_name) && !isAppLocal($app_name)){
         say_error "app '$app_name' not avalable";
         return 0;
     }
@@ -216,8 +218,9 @@ sub install {
     }
     
     if (-e "$app_path/.init.cmd") {
+        say "set init...";
         `$app_path/.init.cmd`;
-        unlink "$app_path/.init.cmd";
+        # unlink "$app_path/.init.cmd";
     }
     
     rmtree "$app_path/.download";
@@ -246,7 +249,7 @@ sub app_list {
     my $app     = shift;
     # say Dumper $db{candidates};
     if($app){
-        isApp($app)
+        (isAppRepo($app) || isAppLocal($app))
             ? ver_list($app)
             : say_error "\33[91mApp \33[0m'$app'\33[91m not available\33[0m";
     } else {
@@ -265,10 +268,16 @@ sub app_list {
     }
 }
 
-sub isApp {
+sub isAppLocal {
     my $app     = shift;
     my $conf    = readFile('./.conf');
-    return $conf =~ m/\b$app\b/g;
+    return $conf =~ m/\b$app\b/g || 0;
+}
+
+sub isAppRepo {
+    my $app     = shift;
+    my $repo    = readFile('./.repo');
+    return $repo =~ m/\b$app\b/ || 0;
 }
 
 sub isVer {
@@ -283,14 +292,17 @@ sub ver_list {
     # my $app_path = $db{$_[0]}[2];
     my $app_name    = $_[0];
 
-    say_error "App '$app_name' not avalable" if ! isApp($app_name);
+    say_error "App '$app_name' not avalable" if (!isAppRepo($app_name) && !isAppLocal($app_name));
 
     my $app_info    = conf $app_name;
     my $curr_vers   = $app_info->{vers};
     my $curr_path   = $app_info->{path};
 
     my $set_vers    = $_[1];
-    my $app_path    = $_[2] || $curr_path;
+    my $app_path    = $_[2] || $curr_path || cwd();
+
+    # say "### app_path: $app_path";
+    # say "### curr_path: $curr_path";
 
 
     # $app_path       = cwd() if !$app_path;
@@ -361,7 +373,7 @@ sub ver_list {
 
 sub version_change {
     my $app_name = shift;
-    my $curr_vers = shift;
+    my $curr_vers = shift || 0;
     my $app_vers = shift;
     my $app_path = shift;
     
@@ -371,11 +383,13 @@ sub version_change {
         exit;
     }
 
-    say "change version of app $app_name from $curr_vers to $app_vers";
+    say "change version of app $app_name from $curr_vers to $app_vers" if $curr_vers != 0;
 
     make_link ($app_path, $app_vers);
     conf ($app_name, { 'vers' => $app_vers, 'path' => $app_path });
-    say "$app_name version changed...";
+    
+    say "$app_name version changed..." if $curr_vers != 0;
+
     if (-e "$app_path/.vers.vman.cmd") {
         `$app_path/.vers.vman.cmd`;
     }

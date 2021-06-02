@@ -253,7 +253,7 @@ sub progress (;@) {
         my $killCode = sub {
             say "\x1b[1A\x1b[9C".(' 'x200);
             # say "\x1b[1A\x1b[9C $text_after".('.'x(52 - length $text_after))." done!";
-            say "\x1b[1A\x1b[9C ...complete for '$text_after'";
+            say "\x1b[2A\x1b[9C ...complete for '$text_after'";
             threads->exit();
         };
 
@@ -270,6 +270,7 @@ sub progress (;@) {
         
         while (1){};
     }, @_);
+
     return $progress;
 }
 
