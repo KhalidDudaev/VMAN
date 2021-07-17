@@ -384,12 +384,12 @@ sub version_change {
         exit;
     }
 
-    say "change version of app $app_name from $curr_vers to $app_vers" if $curr_vers != 0;
+    say "change version of app $app_name from $curr_vers to $app_vers" if $curr_vers ne "0";
 
     make_link ($app_path, $app_vers);
     conf ($app_name, { 'vers' => $app_vers, 'path' => $app_path });
     
-    say "$app_name version changed..." if $curr_vers != 0;
+    say "$app_name version changed..." if $curr_vers ne "0";
 
     if (-e "$app_path/.vers.vman.cmd") {
         `$app_path/.vers.vman.cmd`;
