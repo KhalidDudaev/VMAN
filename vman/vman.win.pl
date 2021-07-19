@@ -88,6 +88,8 @@ sub init {
     my $app_vers        = $_[1];
     my $app_dir         = getLocalDirName $app_path;
     my $app_name        = $_[0] || $app_dir;
+
+    say_error "App '$app_name' not avalable" if (!isAppRepo($app_name) && !isAppLocal($app_name));
     
     mkdir $app_path if ! -d $app_path;
 
