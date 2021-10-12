@@ -119,6 +119,7 @@ java
     8.0.282.hs    https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u282-b08/OpenJDK8U-jdk_x64_windows_hotspot_8u282b08.zip
 
 kotlin
+    1.5.31    https://github.com/JetBrains/kotlin/releases/download/v1.5.31/kotlin-compiler-1.5.31.zip
     1.5.20    https://github.com/JetBrains/kotlin/releases/download/v1.5.20/kotlin-compiler-1.5.20.zip
     1.5.10    https://github.com/JetBrains/kotlin/releases/download/v1.5.10/kotlin-compiler-1.5.10.zip
     1.5.0    https://github.com/JetBrains/kotlin/releases/download/v1.5.0/kotlin-compiler-1.5.0.zip
@@ -159,6 +160,7 @@ perl
     5.14.4.1    https://strawberryperl.com/download/5.14.4.1/strawberry-perl-5.14.4.1-64bit.zip
 
 python
+    3.10.0   https://www.python.org/ftp/python/3.10.0/python-3.10.0-embed-amd64.zip
     3.9.5    https://www.python.org/ftp/python/3.9.5/python-3.9.5-embed-amd64.zip
     3.9.4    https://www.python.org/ftp/python/3.9.4/python-3.9.4-embed-amd64.zip
     3.9.2    https://www.python.org/ftp/python/3.9.2/python-3.9.2-embed-amd64.zip
