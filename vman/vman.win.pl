@@ -1,6 +1,10 @@
 #!perl
 use strict;
 use warnings;
+
+use Win32::Console;
+Win32::Console::OutputCP(65001);
+
 use feature 'say';
 use Cwd 'cwd';
 use Data::Dumper;
@@ -10,6 +14,7 @@ use LWP::UserAgent;
 use HTTP::Tiny;
 use File::Path;
 use File::Copy;
+
 
 # use lib Cwd::cwd.'/lib/';
 use lib 'c:/__programs__/utools/vman/lib/';
