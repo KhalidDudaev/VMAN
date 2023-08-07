@@ -70,6 +70,7 @@ setConf './.conf';
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:h|help|\-h|\-\-help|\/\?)\b/) { say ''; help(); say ''; goto end; }
 if (!$ARGV[0] || $ARGV[0] eq "-v") { say ''; version(); say ''; goto end; }
 if ($ARGV[0] && $ARGV[0] eq "init") { init($ARGV[1], 'NVER', $ARGV[2]); goto end; }
+if ($ARGV[0] && $ARGV[0] eq "delete") { deleteRepo($ARGV[1], $ARGV[2]); goto end; }
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:l|list|\-l|\-\-list)\b/) { say ''; app_list($ARGV[1]); say ''; goto end; } 
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:r|repo|\-r|\-\-repo)\b/) { say ''; repo_list(); say ''; goto end; } 
 if ($ARGV[0] && $ARGV[0] =~ /\b(?:u|update|\-u|\-\-update)\b/) { say ''; repoUpdate(); say ''; goto end; } 
@@ -233,6 +234,24 @@ sub install {
     rmtree "$app_path/.download";
     rmtree "$app_path/.install";
     rmtree "$app_path/.conf";
+}
+
+sub deleteRepo {
+    my $app_name    = shift;
+    my $app_vers    = shift;
+    # my $app_path    = shift;
+
+    print "\33[91mAre you sure you want to delete '$app_name v$app_vers'?\33[0m \33[90m(type 'yes' if you want to delete)\33[0m : ";
+    my $answer = <STDIN>;
+    chomp $answer;
+
+    if($answer =~ /\byes\b/i){
+        my $app_info    = conf $app_name;
+        my $app_path   = $app_info->{path};
+
+        rmtree "$app_path/candidate/$app_vers";
+        print "The app '$app_name v$app_vers' has been removed."
+    }
 }
 
 sub repo_list {

@@ -11,9 +11,10 @@ Selecting the program version from the list of versions.
             |
    ----- commands ----------------------------------------------------------------------------------
    [91mh, help[0m                 Display help info.                                                       
-   [91mv[0m                       Show VMan version.
+   [91m-v[0m                       Show VMan version.
    [91minit[0m                    Initialization of a new group of program versions under control of VMan.
-   [91ml, list[0m                 Lists of program groups managed by VMan.                                 
+   [91ml, list[0m                 Lists of program groups managed by VMan.                            
+   [91mdelete[0m                  Delete version of program managed by VMan.                            
    -------------------------------------------------------------------------------------------------
 
 [90mEXAMPLES[0m:
